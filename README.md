@@ -4,6 +4,11 @@ A human follower robot is an autonomous or semi-autonomous robotic system design
 
 Through algorithms for object detection, and navigation, the robot determines the user's location and adjusts its movement to maintain a certain distance or follow specific commands. These robots find applications in tasks like assistance, surveillance, and guiding in public spaces.
 
+# PROTOTYPE OF THE MODEL ~
+
+![image](https://github.com/manassaxena008/ARDUINO-BASED-HUMAN-FOLLOWING-ROBOT/assets/156520126/b95e1c0b-a4da-4123-9ea0-d8c5d38cf87e)
+
+
 # WORKING OF MODEL ~
 
 A human hand-following robot utilizing IR sensors, ultrasonic sensors, Arduino, motor, and wheels employs a sophisticated blend of sensing and control technologies. IR sensors detect emitted infrared light from the hand, while ultrasonic sensors measure distance, providing essential data for the robot's positioning. This data is processed by an Arduino microcontroller, which generates commands to regulate motor wheel movements accordingly.
