@@ -1,0 +1,67 @@
+#include <Arduino_TensorFlowLite.h>
+#include <Arduino_LSM9DS1.h> // Example sensor library, replace with your sensor library
+#include "your_model.h"      // Include the TensorFlow Lite model header file
+
+// Define model input and output tensor shapes
+const int inputTensorWidth = 28;
+const int inputTensorHeight = 28;
+const int inputTensorChannels = 1;
+const int outputTensorWidth = 10; // Example for a classification model with 10 output classes
+const int outputTensorHeight = 1;
+const int outputTensorChannels = 1;
+
+// Buffer to store the input tensor
+float inputTensor[inputTensorWidth * inputTensorHeight * inputTensorChannels];
+
+void setup() {
+  Serial.begin(9600);
+  
+  // Initialize your sensor(s) here
+  if (!IMU.begin()) {
+    Serial.println("Failed to initialize IMU!");
+    while (1);
+  }
+
+  // Initialize TensorFlow Lite
+  if (!TfLite.begin(model_data)) {
+    Serial.println("Failed to initialize TensorFlow Lite!");
+    while (1);
+  }
+}
+
+void loop() {
+  // Read sensor data and preprocess
+  // Example: Read accelerometer data from LSM9DS1 sensor
+  IMU.readAcceleration(
+    inputTensor, 
+    inputTensorWidth, 
+    inputTensorHeight, 
+    inputTensorChannels,
+    -2.0, // Lower bound for accelerometer readings
+    2.0   // Upper bound for accelerometer readings
+  );
+
+  // Run inference
+  TfLite.writeInput(inputTensor);
+  TfLite.invoke();
+
+  // Read the output tensor
+  float outputTensor[outputTensorWidth * outputTensorHeight * outputTensorChannels];
+  TfLite.readOutput(outputTensor);
+
+  // Process output (e.g., classify)
+  // Example: Print the predicted class index
+  int predictedClassIndex = 0;
+  float maxProbability = 0.0;
+  for (int i = 0; i < outputTensorWidth; i++) {
+    if (outputTensor[i] > maxProbability) {
+      maxProbability = outputTensor[i];
+      predictedClassIndex = i;
+    }
+  }
+
+  Serial.print("Predicted class index: ");
+  Serial.println(predictedClassIndex);
+
+  delay(1000); // Delay before next inference
+}
