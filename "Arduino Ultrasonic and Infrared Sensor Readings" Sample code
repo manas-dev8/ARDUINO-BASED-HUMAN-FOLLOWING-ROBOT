@@ -1,0 +1,35 @@
+#include <NewPing.h>
+
+#include <IRremote.h>
+
+#define TRIGGER_PIN  12 
+#define ECHO_PIN     11 
+#define MAX_DISTANCE 200 
+
+// Infrared Sensor Configuration
+#define IR_RECEIVER_PIN 2  // Arduino pin connected to the IR receiver
+
+NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
+
+IRrecv irrecv(IR_RECEIVER_PIN);
+
+decode_results results; 
+void setup() {
+  Serial.begin(9600);
+  irrecv.enableIRIn(); 
+}
+
+void loop() {
+  unsigned int distance = sonar.ping_cm();
+  Serial.print("Ultrasonic Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+
+  if (irrecv.decode(&results)) {
+    Serial.print("Infrared Code: 0x");
+    Serial.println(results.value, HEX);
+    irrecv.resume(); 
+  }
+
+  delay(500);
+}
